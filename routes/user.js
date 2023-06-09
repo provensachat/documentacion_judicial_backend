@@ -31,13 +31,8 @@ router.get('/', async (req, res) => {
   try {
     const { username } = req.query;
 
-    console.log(username);
-    console.log("///");
-
     // Busca al usuario en la base de datos
     const userData = await UserData.findOne({ username });
-
-    console.log(userData);
 
     res.status(201).json(userData);
   } catch (error) {
@@ -50,21 +45,22 @@ router.get('/', async (req, res) => {
 // Ruta para actualizar los datos de un usuario
 router.patch('/setting', async (req, res) => {
   try {
-    var { username} = req.body;
+    const parameter = req.body.parameter;
+    const username = parameter.username;
 
     // Busca al usuario en la base de datos
     const userData = await UserData.findOne({ username });
 
-    if (req.body.email) {
-      userData.email = req.body.email;
+    if (parameter.email){
+      userData.email = parameter.email;
     }
 
-    if (req.body.cellphone) {
-      userData.cellphone = req.body.cellphone;
+    if (parameter.cellphone){
+      userData.cellphone = parameter.cellphone;
     }
 
-    if (req.body.entity) {
-      userData.entity = req.body.entity;
+    if (parameter.entity){
+      userData.entity = parameter.entity;
     }
 
     await userData.save();
