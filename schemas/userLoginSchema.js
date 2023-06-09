@@ -13,7 +13,7 @@ const userLoginSchema = new Schema({
   },
   userRol: {
     type: String,
-    enum: ['subir', 'ver'],
+    enum: ['gestorJudicial', 'abogado', 'fiscal', 'ciudadano'],
     required: true
   }
 });
