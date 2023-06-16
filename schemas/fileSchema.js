@@ -13,6 +13,14 @@ const fileSchema = new Schema({
   linkFile: {
     type: String,
     required: false
+  },
+  caseNumber: {
+    type: String,
+    required: true
+  },
+  dateUpload: {
+    type: Date,
+    required: true
   }
 });
 
