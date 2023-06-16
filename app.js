@@ -6,6 +6,7 @@ const connectToDatabase = require('./database');
 
 const fileRouter = require('./routes/file');
 const userRouter = require('./routes/user');
+const caseRouter = require('./routes/case');
 
 const cors = require('cors');
 
@@ -27,8 +28,11 @@ app.use(passport.session());
 // Ruta base para las rutas de los archivos
 app.use('/api/file', fileRouter);
 
-// Ruta base para las rutas de los archivos
+// Ruta base para las rutas de los usuarios
 app.use('/api/user', userRouter);
+
+// Ruta base para las rutas de los casos
+app.use('/api/case', caseRouter);
 
 // Ruta prueba
 app.get('/', (req, res) => {

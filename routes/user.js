@@ -5,6 +5,7 @@ const router = express.Router();
 
 const User = require('../schemas/userLoginSchema');
 const UserData = require('../schemas/userDataSchema');
+const JuridicPerson = require('../schemas/juridicPersonSchema');
 
 // Ruta para subir un file
 router.post('/', async (req, res) => {
@@ -19,6 +20,24 @@ router.post('/', async (req, res) => {
     await newUserData.save();
 
     res.status(201).json("Usuario ha sido registrado exitosamente");
+  } catch (error) {
+    if (error.code == 11000){
+      res.status(500).json('El nombre de usuario ya existe');
+    }
+  }
+});
+
+// Ruta para crear una persona juridica
+router.post('/person', async (req, res) => {
+  try {
+    var { nameJuridicPerson, 
+          identificationJuridicPerson, 
+          cellphoneJuridicPerson } = req.body;
+    
+    const newJuridicPerson = new JuridicPerson({ nameJuridicPerson, identificationJuridicPerson, cellphoneJuridicPerson });
+    await newJuridicPerson.save();
+
+    res.status(201).json("Persona Juridica ha sido registrada exitosamente");
   } catch (error) {
     if (error.code == 11000){
       res.status(500).json('El nombre de usuario ya existe');
@@ -42,11 +61,44 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Obtener todos los usuarios según un rol
+router.get('/person/all', async (req, res) => {
+  try {
+    // Busca a los ciudadanos juridicos
+    const juridicPersons = await JuridicPerson.find();
+
+    // Devuelve los usuarios como respuesta en formato JSON
+    res.json(juridicPersons);
+  } catch (error) {
+    // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Obtener todos los ciudadanos juridicos
+router.get('/all', async (req, res) => {
+  try {
+    const { userRol } = req.query;
+
+    // Busca a los usuarios en la base de datos por rol
+    const users = await User.find({ userRol });
+
+    // Devuelve los usuarios como respuesta en formato JSON
+    res.json(users);
+  } catch (error) {
+    // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+
 // Ruta para actualizar los datos de un usuario
 router.patch('/setting', async (req, res) => {
   try {
     const parameter = req.body.parameter;
     const username = parameter.username;
+
+    console.log(parameter);
 
     // Busca al usuario en la base de datos
     const userData = await UserData.findOne({ username });
