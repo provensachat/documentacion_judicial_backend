@@ -21,7 +21,13 @@ router.post('/', async (req, res) => {
           
     if (caseEntity){
       caseData.caseEntity = caseEntity;
-      const code = generarCodigo();
+      
+      var code = generarCodigo();
+
+      while (await findCaseNumber(caseEntity + code) != null){
+        code = generarCodigo();
+      }
+      
       caseData.caseNumber = caseEntity + code;
     }
 
@@ -207,6 +213,15 @@ function usernameReturn(arrayIncoming, attribute){
   }
 
   return arrayNames;
+}
+
+// This is gonna find if the caseNumber is already on the table
+// If is not, its NULL, is a unique caseNumber
+// If it is, its NOT NULL, is a repeated caseNumber
+
+async function findCaseNumber (caseNumber){
+  const searchResult = await Case.findOne({"caseNumber":caseNumber});
+  return searchResult;
 }
 
 // Exporta el enrutador
