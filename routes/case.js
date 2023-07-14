@@ -118,6 +118,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Obtener todos los casos asociados a un usuario según el rol que tenga
+
+router.get('/user', async (req, res) => {
+  try {
+    const { userRol, username } = req.query;
+    var cases = [];
+    if (userRol == 'abogado') {
+      cases = await Case.find({ caseLawyer: { $in: [username] } });
+    }
+    if (userRol == 'fiscal') {
+      cases = await Case.find({ caseFiscal: { $in: [username] } });
+    }
+    if (userRol == 'juez') {
+      cases = await Case.find({ caseJudge: { $in: [username] } });
+    }
+    // Devuelve los casos asociados como respuesta en formato JSON
+    res.json(cases);
+  } catch (error) {
+    // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
 // This its gonna updated any case
 
 router.patch('/update', async (req, res) => {
