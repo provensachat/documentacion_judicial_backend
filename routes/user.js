@@ -91,14 +91,40 @@ router.get('/all', async (req, res) => {
   }
 });
 
+// Obtener todos los usuarios con rol
+router.get('/list', async (req, res) => {
+  try {
+    // Busca a todos los usuarios
+    const user = await User.find();
+    // Devuelve los usuarios como respuesta en formato JSON
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Obtener la información completa de los datos de cada usuario
+router.get('/list/userdata', async (req, res) => {
+  try {
+    // Busca a todos los usuarios
+    const userData = await UserData.find();
+    // Devuelve los usuarios como respuesta en formato JSON
+    res.json(userData);
+  } catch (error) {
+    console.log(error);
+    // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
 
 // Ruta para actualizar los datos de un usuario
 router.patch('/setting', async (req, res) => {
   try {
     const parameter = req.body.parameter;
     const username = parameter.username;
-
-    console.log(parameter);
 
     // Busca al usuario en la base de datos
     const userData = await UserData.findOne({ username });
@@ -121,6 +147,20 @@ router.patch('/setting', async (req, res) => {
     if (error.code == 11000){
       res.status(500).json('El nombre de usuario ya existe');
     }
+  }
+});
+
+router.patch('/rol', async (req, res) => {
+  try{
+    const username = req.body.caseData.username;
+    const user = await User.findOne({ username });
+    user.userRol = req.body.caseData.userRol;
+    await user.save();
+    res.status(201).json('Actualización de rol exitosa!');
+  }
+  catch (error) {
+    console.log(error)
+    res.status(500).json('Ocurrio un error en la actualización');
   }
 });
 
