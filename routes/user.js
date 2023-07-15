@@ -10,10 +10,10 @@ const JuridicPerson = require('../schemas/juridicPersonSchema');
 // Ruta para subir un file
 router.post('/', async (req, res) => {
   try {
-    var { username, password, userRol } = req.body;
+    var { username, password } = req.body;
     
     password = await criptPass(password);
-    const newUser = new User({ username, password, userRol });
+    const newUser = new User({ username, password, userRol : 'ciudadano' });
     await newUser.save();
 
     const newUserData = new UserData({ username });

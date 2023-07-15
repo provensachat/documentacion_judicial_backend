@@ -14,7 +14,8 @@ router.post('/', async (req, res) => {
             caseDemandado,
             caseDescription,
             caseEntity,
-            caseState
+            caseState,
+            casePrivacy
           } = req.body;
           
     const caseData = {};
@@ -75,6 +76,12 @@ router.post('/', async (req, res) => {
 
     if (caseDescription){
       caseData.caseDescription = caseDescription;
+    }
+
+    if (casePrivacy){
+      caseData.casePrivacy = casePrivacy;
+    }else{
+      caseData.casePrivacy = ["Publico"]
     }
 
     const newCase = new Case(caseData);
@@ -205,6 +212,22 @@ router.patch('/update', async (req, res) => {
 
   } catch (error) {
     // Manejo de errores si ocurre alguna excepción
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Esto es la actualización
+
+router.patch('/update/state', async (req, res) => {
+  try{
+    const { caseNumber, caseState } = req.body.caseData;
+    const caseData = await Case.findOne({"caseNumber":caseNumber});
+    caseData.caseState = caseState;
+    await caseData.save();
+    res.status(201).json("El estado del caso ha sido actualizado");
+  }
+  catch (error){
+    console.log(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });
   }
 });

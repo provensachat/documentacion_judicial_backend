@@ -53,6 +53,11 @@ const caseSchema = new Schema({
     type: String,
     enum: ['Por Asignar', 'En ejecucion', 'Finalizado', 'En revision'],
     required: true
+  },
+  casePrivacy: {
+    type: String,
+    enum: ['Privado', 'Publico'],
+    required: false
   }
 
 });
