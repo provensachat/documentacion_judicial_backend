@@ -6,6 +6,7 @@ const router = express.Router();
 const User = require('../schemas/userLoginSchema');
 const UserData = require('../schemas/userDataSchema');
 const JuridicPerson = require('../schemas/juridicPersonSchema');
+const Auditor = require('../schemas/auditorSchema');
 
 // Ruta para subir un file
 router.post('/', async (req, res) => {
@@ -41,6 +42,32 @@ router.post('/person', async (req, res) => {
   } catch (error) {
     if (error.code == 11000){
       res.status(500).json('El nombre de usuario ya existe');
+    }
+  }
+});
+
+// Ruta para crear un auditor
+router.post('/auditor', async (req, res) => {
+  try {
+    var { username,
+          auditorEntity,
+          auditorDescription } = req.body;
+    
+    // Obtener la fecha actual
+    const dateInscription = Date.now();
+
+    const newAuditor = new Auditor({ username, auditorEntity, auditorDescription, dateInscription });
+    await newAuditor.save();
+    
+    const user = await User.findOne({ username });
+    user.userRol = 'auditor';
+    await user.save();
+
+    res.status(201).json("¡Se ha actualizado el rol a auditor!");
+  } catch (error) {
+    if (error.code == 11000){
+      console.log(error);
+      res.status(500).json('Ocurrio un error en el guardado');
     }
   }
 });
