@@ -7,6 +7,7 @@ const connectToDatabase = require('./database');
 const fileRouter = require('./routes/file');
 const userRouter = require('./routes/user');
 const caseRouter = require('./routes/case');
+const extensionRouter = require('./routes/extension');
 
 const cors = require('cors');
 
@@ -33,6 +34,9 @@ app.use('/api/user', userRouter);
 
 // Ruta base para las rutas de los casos
 app.use('/api/case', caseRouter);
+
+// Ruta base para las rutas de las extensiones
+app.use('/api/extension', extensionRouter);
 
 // Ruta prueba
 app.get('/', (req, res) => {

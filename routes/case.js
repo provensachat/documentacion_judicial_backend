@@ -140,6 +140,12 @@ router.get('/user', async (req, res) => {
     if (userRol == 'juez') {
       cases = await Case.find({ caseJudge: { $in: [username] } });
     }
+    if (userRol == 'demandante') {
+      cases = await Case.find({ caseDemandante: { $in: [username] } });
+    }
+    if (userRol == 'demandado') {
+      cases = await Case.find({ caseDemandado: { $in: [username] } });
+    }
     // Devuelve los casos asociados como respuesta en formato JSON
     res.json(cases);
   } catch (error) {

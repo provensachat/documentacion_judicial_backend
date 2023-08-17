@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
 });
 
 // Ruta para actualizar las notas asociadas a un documento
-// Las notas son iguales si el nombre del caso y el nombre del usuario son el mismo
+// Las notas son iguales si el nombre del caso, el nombre del usuario y nombre del documento son el mismo
 // En caso contrario se considerará como registro único
 
 router.patch('/update', async (req, res) => {
@@ -55,16 +55,16 @@ router.patch('/update', async (req, res) => {
     const { caseNumber, caseNotesOWner, caseNotes, nameFile } = req.body.caseData;
 
     // Buscamos las notas asoaciadas al documento
-    const NotesFile = await NotesCaseSchema.findOne({ caseNumber, caseNotesOWner });
+    const NotesFile = await NotesCaseSchema.findOne({ caseNumber, caseNotesOWner, nameFile });
     
     // Si no existen, lo creamos
     if (NotesFile == null){
-    const newNotesFile = new NotesCaseSchema({ caseNumber, caseNotesOWner, caseNotes, nameFile });
-    await newNotesFile.save();
-    res.status(201).json(newNotesFile);
+      const newNotesFile = new NotesCaseSchema({ caseNumber, caseNotesOWner, caseNotes, nameFile });
+      await newNotesFile.save();
+      res.status(201).json(newNotesFile);
     }
     else{
-      const NotesFile = await NotesCaseSchema.findOne({ caseNumber, caseNotesOWner });
+      const NotesFile = await NotesCaseSchema.findOne({ caseNumber, caseNotesOWner, nameFile });
       await NotesCaseSchema.deleteOne(NotesFile);
       const newNotesFile = new NotesCaseSchema({ caseNumber, caseNotesOWner, caseNotes, nameFile });
       await newNotesFile.save();
@@ -86,6 +86,26 @@ router.get('/notes', async (req, res) => {
 
     // Buscamos las notas asoaciadas al documento
     const NotesFile = await NotesCaseSchema.findOne({ caseNumber, caseNotesOWner, nameFile });
+    if (NotesFile != null){
+      res.status(201).json(NotesFile);
+    }
+    else{
+      res.status(201).json("No hay notas asociadas");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error al obtener los archivos' });
+  }
+});
+
+// Router para obtener todas las notas escritas por un usuario en el documento
+
+router.get('/notes/document', async (req, res) => {
+  try {
+    const { caseNumber, caseNotesOWner } = req.query;
+
+    // Buscamos las notas asoaciadas al documento
+    const NotesFile = await NotesCaseSchema.find({ caseNumber, caseNotesOWner});
     if (NotesFile != null){
       res.status(201).json(NotesFile);
     }
