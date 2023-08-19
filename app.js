@@ -8,6 +8,7 @@ const fileRouter = require('./routes/file');
 const userRouter = require('./routes/user');
 const caseRouter = require('./routes/case');
 const extensionRouter = require('./routes/extension');
+const observationRouter = require('./routes/observation');
 
 const cors = require('cors');
 
@@ -37,6 +38,9 @@ app.use('/api/case', caseRouter);
 
 // Ruta base para las rutas de las extensiones
 app.use('/api/extension', extensionRouter);
+
+// Ruta base para las rutas de las observaciones
+app.use('/api/observation', observationRouter);
 
 // Ruta prueba
 app.get('/', (req, res) => {

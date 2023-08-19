@@ -6,12 +6,12 @@ const NotesCaseSchema = require('../schemas/notesCaseSchema');
 // Ruta para subir un file
 router.post('/', async (req, res) => {
   try {
-    const { nameFile, typeFile, linkFile, caseNumber } = req.body;
+    const { nameFile, typeFile, linkFile, caseNumber, fileNotary } = req.body;
     
     // Obtener la fecha actual
     const dateUpload = Date.now();
 
-    const newFile = new File({ nameFile, typeFile, linkFile, dateUpload, caseNumber });
+    const newFile = new File({ nameFile, typeFile, linkFile, dateUpload, caseNumber, fileNotary });
 
     await newFile.save();
     res.status(201).json(newFile);

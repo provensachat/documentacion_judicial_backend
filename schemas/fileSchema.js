@@ -21,6 +21,10 @@ const fileSchema = new Schema({
   dateUpload: {
     type: Date,
     required: true
+  },
+  fileNotary: {
+    type: String,
+    required: false
   }
 });
 
